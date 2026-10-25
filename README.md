@@ -13,7 +13,12 @@ You need to install this dkms module in **both host and guest!**
 
 ## Required kernel
 
-**Required kernel**: 6.18.x ~ 7.2.x
+**Required kernel**: 6.18.x ~ 7.3.x (current checkout)
+
+The unreleased kernel 7.3 compatibility changes are build-tested against Ubuntu
+`7.3.0-9-generic` and smoke-tested in an i915 SR-IOV guest: accelerated OpenGL
+and H.264 VA-API encoding/decoding passed. Xe and PF/host operation have only
+been build-tested. The `2026.09.16` release supports kernels up to 7.2.x.
 
 **Latest release**: [2026.09.16](https://github.com/strongtz/i915-sriov-dkms/releases/tag/2026.09.16)
 
@@ -28,6 +33,39 @@ It is recommended that to upgrade to a supported kernel, the older branches will
 **Note**: The Host and Guest VM are not strictly required to use the same module version.
 
 **Note on Secure Boot:** Loading out-of-tree kernel modules requires Secure Boot to be disabled. If you require Secure Boot, ensure you are using a signed kernel and follow the instructions in the [UEFI Secure Boot Enabled Configuration](docs/secure-boot.md) guide to sign the module.
+
+## Local Debian/Ubuntu package
+
+This checkout builds the local package `2026.10.16+local1`. It includes the kernel
+7.3 compatibility changes and retains kernel 7.2 support. All four modules
+(`intel_sriov_compat`, `i915`, `kvmgt`, and `xe`) have been build-tested against
+`7.2.6-070206-generic` and `7.3.0-9-generic`. Runtime validation is limited to
+the i915 SR-IOV guest described above.
+
+Build a package from the repository root:
+
+```sh
+sudo apt install build-essential debhelper dh-dkms
+dpkg-buildpackage -b -us -uc
+```
+
+Install it on Ubuntu, keeping the kernel headers metapackage installed for future
+kernel updates:
+
+```sh
+sudo apt install linux-headers-generic ../i915-sriov-dkms_2026.10.16+local1_amd64.deb
+```
+
+The package registers its sources with DKMS and builds for installed supported
+kernels that have matching headers. With `AUTOINSTALL=yes`, the distribution's
+kernel and header hooks rebuild and install the modules for subsequent supported
+kernel updates. The package refreshes initramfs during installation; reboot to
+load the new modules.
+
+Automatic builds include 7.2.x and 7.3.x. Kernel 7.4 and later are excluded until
+their APIs are checked and the supported range is updated. DKMS rebuilds this
+source package; it does not download newer driver source or guarantee
+compatibility with future kernel API changes.
 
 ## Required Kernel Parameters
 

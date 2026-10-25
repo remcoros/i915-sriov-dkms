@@ -1,4 +1,8 @@
 #include_next <linux/dma-fence.h>
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7, 3, 0)
+#define dma_fence_enable_sw_signaling dma_fence_enable_signaling
+#endif
 #ifndef __BACKPORT_DMA_FENCE_H__
 #define __BACKPORT_DMA_FENCE_H__
 

@@ -1,4 +1,14 @@
-i915-sriov-dkms (###LATEST_VERSION###) UNRELEASED; urgency=medium
+i915-sriov-dkms (2026.10.16+local1) UNRELEASED; urgency=medium
+
+  * Local build with kernel 7.3 API compatibility and continued kernel 7.2 support.
+  * Enable DKMS autoinstall for supported kernels, including 7.2.x and 7.3.x.
+  * Use a distinct package and module version for upgrades from the test build.
+  * Set a valid Debian policy version and report maintainer-script failures.
+  * Refresh initramfs on removal so it does not retain the removed modules.
+
+ -- Local build <local@localhost>  Fri, 16 Oct 2026 13:44:40 +0200
+
+i915-sriov-dkms (2026.09.16) UNRELEASED; urgency=medium
 
   * Fix ETIME probe timeout on Xe_LP platforms by making CCS opt-in
 
